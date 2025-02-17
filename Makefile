@@ -3,8 +3,8 @@ NAME 			= 	wolfram
 STACK 			= 	stack
 STACK_OBJ       =   .stack-work
 
-SRC             =   src/Main.hs \
-                    src/Rules.hs \
+SRC             =	src/Main.hs \
+					src/Rules.hs \
                     src/Display.hs \
 					src/Rules.hs \
 					src/ErrorHandling.hs \
