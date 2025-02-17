@@ -24,8 +24,13 @@ runAutomaton :: Int -> Int -> [Char] -> Int -> Int -> IO [String]
 runAutomaton _ _ _ 0 _ = return []
 runAutomaton rule start state lines move
     | start < 0 = error "Start index is out of bounds"
+    | move == 0 = do
+        let extendedState = replicate move ' ' ++ state ++ replicate move  ' '
+        let nextState = applyRule rule extendedState
+        nextAutomaton <- runAutomaton rule start nextState (lines - 1) move
+        return (extendedState : nextAutomaton)
     | otherwise = do
-        let extendedState = replicate move ' ' ++ state ++ replicate move ' ' -- Ajouter du padding symétrique
+        let extendedState = replicate move ' ' ++ state ++ replicate move ' '
         let nextState = applyRule rule extendedState
         nextAutomaton <- runAutomaton rule start nextState (lines - 1) move
         return (extendedState : nextAutomaton)

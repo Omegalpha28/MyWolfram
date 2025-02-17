@@ -1,7 +1,7 @@
 module Main where
 
 import System.Environment (getArgs)
-import System.Exit (exitWith, ExitCode(ExitFailure))
+import System.Exit (exitWith, ExitCode(ExitFailure, ExitSuccess))
 import Display (displayAutomaton)
 import Cells (generateAutomaton)
 import ErrorHandling (invalidOptionError)
@@ -19,13 +19,5 @@ main = do
             let newstart = start + 1
             let newLines = lines + newstart - 1
             automaton <- generateAutomaton rule newstart window newLines move
-            displayAutomaton newstart window newLines automaton
-
-
-
-
-
-
-
-
-
+            displayAutomaton newstart window move newLines automaton
+            exitWith ExitSuccess
