@@ -5,7 +5,7 @@ STACK_OBJ       =   .stack-work
 
 SRC             =	src/Main.hs \
 					src/Rules.hs \
-                    src/Display.hs \
+					src/Display.hs \
 					src/Rules.hs \
 					src/ErrorHandling.hs \
 					src/Cells.hs
