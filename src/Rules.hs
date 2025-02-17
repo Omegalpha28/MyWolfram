@@ -29,7 +29,6 @@ applyRule30 a b c = case (a, b, c) of
     _               -> ' '
 
 
--- Règle 90
 applyRule90 :: Char -> Char -> Char -> Char
 applyRule90 a b c = case (a, b, c) of
     ('*', '*', '*') -> ' '
@@ -42,7 +41,6 @@ applyRule90 a b c = case (a, b, c) of
     (' ', ' ', ' ') -> ' '
     _               -> ' '
 
--- Règle 110
 applyRule110 :: Char -> Char -> Char -> Char
 applyRule110 a b c = case (a, b, c) of
     ('*', '*', '*') -> ' '
