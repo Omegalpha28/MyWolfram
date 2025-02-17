@@ -16,8 +16,9 @@ main = do
         Right opts -> do
             let (rule, start, window, lines, move) = assignValue opts
             validateRule rule
-            automaton <- generateAutomaton rule start window lines move
-            displayAutomaton start window lines automaton
+            let newLines = lines + start - 1
+            automaton <- generateAutomaton rule start window newLines move
+            displayAutomaton start window newLines automaton
 
 
 
