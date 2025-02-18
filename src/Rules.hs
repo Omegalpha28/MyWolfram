@@ -43,32 +43,6 @@ applyRule30 a b c character =
     else ' '
 
 
-applyRule90 :: Char -> Char -> Char -> Char -> Char
-applyRule90 a b c d =
-    if a /= ' ' && b /= ' ' && c /= ' ' then ' '
-    else if a /= ' ' && b /= ' ' && c == ' ' then d
-    else if a /= ' ' && b == ' ' && c /= ' ' then ' '
-    else if a /= ' ' && b == ' ' && c == ' ' then d
-    else if a == ' ' && b /= ' ' && c /= ' ' then d
-    else if a == ' ' && b /= ' ' && c == ' ' then ' '
-    else if a == ' ' && b == ' ' && c /= ' ' then d
-    else if a == ' ' && b == ' ' && c == ' ' then ' '
-    else ' '
-
-
-applyRule110 :: Char -> Char -> Char -> Char -> Char
-applyRule110 a b c d =
-    if a /= ' ' && b /= ' ' && c /= ' ' then ' '
-    else if a /= ' ' && b /= ' ' && c == ' ' then d
-    else if a /= ' ' && b == ' ' && c /= ' ' then d
-    else if a /= ' ' && b == ' ' && c == ' ' then ' '
-    else if a == ' ' && b /= ' ' && c /= ' ' then d
-    else if a == ' ' && b /= ' ' && c == ' ' then d
-    else if a == ' ' && b == ' ' && c /= ' ' then d
-    else if a == ' ' && b == ' ' && c == ' ' then ' '
-    else ' '
-
-
 applyRule54 :: Char -> Char -> Char -> Char -> Char
 applyRule54 a b c d =
     if a /= ' ' && b /= ' ' && c /= ' ' then ' '
@@ -107,6 +81,19 @@ applyRule62 a b c d =
     else ' '
 
 
+applyRule90 :: Char -> Char -> Char -> Char -> Char
+applyRule90 a b c d =
+    if a /= ' ' && b /= ' ' && c /= ' ' then ' '
+    else if a /= ' ' && b /= ' ' && c == ' ' then d
+    else if a /= ' ' && b == ' ' && c /= ' ' then ' '
+    else if a /= ' ' && b == ' ' && c == ' ' then d
+    else if a == ' ' && b /= ' ' && c /= ' ' then d
+    else if a == ' ' && b /= ' ' && c == ' ' then ' '
+    else if a == ' ' && b == ' ' && c /= ' ' then d
+    else if a == ' ' && b == ' ' && c == ' ' then ' '
+    else ' '
+
+
 applyRule94 :: Char -> Char -> Char -> Char -> Char
 applyRule94 a b c d =
     if a /= ' ' && b /= ' ' && c /= ' ' then ' '
@@ -130,6 +117,20 @@ applyRule102 a b c d =
     else if a == ' ' && b == ' ' && c /= ' ' then d
     else if a == ' ' && b == ' ' && c == ' ' then ' '
     else ' '
+
+
+applyRule110 :: Char -> Char -> Char -> Char -> Char
+applyRule110 a b c d =
+    if a /= ' ' && b /= ' ' && c /= ' ' then ' '
+    else if a /= ' ' && b /= ' ' && c == ' ' then d
+    else if a /= ' ' && b == ' ' && c /= ' ' then d
+    else if a /= ' ' && b == ' ' && c == ' ' then ' '
+    else if a == ' ' && b /= ' ' && c /= ' ' then d
+    else if a == ' ' && b /= ' ' && c == ' ' then d
+    else if a == ' ' && b == ' ' && c /= ' ' then d
+    else if a == ' ' && b == ' ' && c == ' ' then ' '
+    else ' '
+
 
 applyRule122 :: Char -> Char -> Char -> Char -> Char
 applyRule122 a b c d =
