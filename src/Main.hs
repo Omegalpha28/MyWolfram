@@ -14,10 +14,10 @@ main = do
     case result of
         Left err -> putStrLn ("Error: " ++ err) >> exitWith (ExitFailure 84)
         Right opts -> do
-            let (rule, start, window, lines, move) = assignValue opts
+            let (rule, start, window, lines, move, character) = assignValue opts
             validateRule rule
             let newstart = start + 1
             let newLines = lines + newstart - 1
-            automaton <- generateAutomaton rule newstart window newLines move
+            automaton <- generateAutomaton rule newstart window newLines move character
             displayAutomaton newstart window move newLines automaton
             exitWith ExitSuccess

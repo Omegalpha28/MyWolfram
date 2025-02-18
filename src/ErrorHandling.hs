@@ -13,6 +13,7 @@ handleHelpException = do
     putStrLn "  --start     Define the start value."
     putStrLn "  --lines     Set the number of lines"
     putStrLn "  --window    Set the size of the window."
+    putStrLn "  --c         Define the character used."
     exitWith (ExitFailure 0)
 
 invalidOptionError :: String -> IO ()

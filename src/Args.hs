@@ -5,6 +5,7 @@ import System.Environment
 import Text.Read (readMaybe)
 import ErrorHandling (invalidOptionError, handleHelpException, exitError)
 import Display
+import Data.Char (ord)
 
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
@@ -14,32 +15,38 @@ safeTail :: [a] -> [a]
 safeTail [] = []
 safeTail (_:xs) = xs
 
-data Token = RULE Int | START Int | WINDOW Int | LINES Int | MOVE Int deriving (Eq, Show)
+data Token = RULE Int | START Int | WINDOW Int | LINES Int | MOVE Int | CHARACTER Char deriving (Eq, Show)
 
 parseArgs :: [String] -> Either String [Token]
 parseArgs [] = Left "Any options given"
 parseArgs ("--rule" : r : rest) = case readMaybe r of
     Just n  -> parseRest rest [RULE n]
-    Nothing -> Left "The option --rule must be followed by a available value."
+    Nothing -> Left "The option --rule must be followed by an available value."
 parseArgs (opt : _) = Left $ "The first argument must be '--rule <nombre>'"
 
 parseRest :: [String] -> [Token] -> Either String [Token]
 parseRest [] tokens = Right tokens
-parseRest (opt : val : rest) tokens = case (opt, readMaybe val) of
-    ("--start", Just n)  -> parseRest rest (tokens ++ [START n])
-    ("--window", Just n) -> parseRest rest (tokens ++ [WINDOW n])
-    ("--lines", Just n)  -> parseRest rest (tokens ++ [LINES n])
-    ("--move", Just n)   -> parseRest rest (tokens ++ [MOVE n])
-    _ -> Left $ "Invalid option or missing required value: " ++ opt
+parseRest (opt : val : rest) tokens
+    | opt == "--c", Just c <- safeHead val = parseRest rest (tokens ++ [CHARACTER c])
+    | otherwise = case readMaybe val of
+        Just n -> case opt of
+            "--start"  -> parseRest rest (tokens ++ [START n])
+            "--window" -> parseRest rest (tokens ++ [WINDOW n])
+            "--lines"  -> parseRest rest (tokens ++ [LINES n])
+            "--move"   -> parseRest rest (tokens ++ [MOVE n])
+            _          -> Left $ "Invalid option or missing required value: " ++ opt
+        Nothing -> Left $ "Invalid option or missing required value: " ++ opt
 parseRest _ _ = Left "Syntax error: option <value>."
 
-assignValue :: [Token] -> (Int, Int, Int, Int, Int)
+
+assignValue :: [Token] -> (Int, Int, Int, Int, Int, Char)
 assignValue tokens =
   ( extractRule tokens
   , extractStart tokens
   , extractWindow tokens
   , extractLines tokens
   , extractMove tokens
+  , extractChar tokens
   )
 
 extractRule :: [Token] -> Int
@@ -66,12 +73,14 @@ extractMove (MOVE v : _) = v
 extractMove (_ : xs) = extractMove xs
 extractMove [] = 0
 
+extractChar :: [Token] -> Char
+extractChar (CHARACTER v : _) = v  -- Retourne directement le Char
+extractChar (_ : xs) = extractChar xs
+extractChar [] = '*'  -- Assure une valeur par défaut en Char
+
 validateRule :: Int -> IO ()
 validateRule rule = do
   if rule `elem` [30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222, 250]
   then return ()
   else exitError "Unexpected rule: The available rules are 30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222 and 250"
 
-parseNumber :: Maybe Int -> Maybe Int
-parseNumber Nothing = Nothing
-parseNumber (Just x) = Just x
