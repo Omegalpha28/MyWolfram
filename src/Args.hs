@@ -68,9 +68,9 @@ extractMove [] = 0
 
 validateRule :: Int -> IO ()
 validateRule rule = do
-  if rule `elem` [30, 90, 110]
+  if rule `elem` [30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222, 250]
   then return ()
-  else exitError "Unexpected rule. The available rules are 30, 90, et 110."
+  else exitError "Unexpected rule: The available rules are 30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222 and 250"
 
 parseNumber :: Maybe Int -> Maybe Int
 parseNumber Nothing = Nothing

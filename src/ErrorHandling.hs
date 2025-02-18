@@ -9,7 +9,7 @@ handleHelpException = do
     putStrLn "Usage: [OPTIONS]"
     putStrLn "  --help      Show useful info about the project."
     putStrLn "  --h         Alias for --help."
-    putStrLn "  --rule      Define the rule used. (Rule aviable : 30, 90, 110)"
+    putStrLn "  --rule      Define the rule used. (Rule aviable : 30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222, 250)"
     putStrLn "  --start     Define the start value."
     putStrLn "  --lines     Set the number of lines"
     putStrLn "  --window    Set the size of the window."
