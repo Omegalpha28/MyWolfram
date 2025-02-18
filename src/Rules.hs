@@ -57,7 +57,7 @@ applyRule90 a b c d =
 
 
 applyRule110 :: Char -> Char -> Char -> Char -> Char
-applyRule110 a b c d = 
+applyRule110 a b c d =
     if a /= ' ' && b /= ' ' && c /= ' ' then ' '
     else if a /= ' ' && b /= ' ' && c == ' ' then d
     else if a /= ' ' && b == ' ' && c /= ' ' then d
@@ -70,7 +70,7 @@ applyRule110 a b c d =
 
 
 applyRule54 :: Char -> Char -> Char -> Char -> Char
-applyRule54 a b c d = 
+applyRule54 a b c d =
     if a /= ' ' && b /= ' ' && c /= ' ' then ' '
     else if a /= ' ' && b /= ' ' && c == ' ' then ' '
     else if a /= ' ' && b == ' ' && c /= ' ' then d

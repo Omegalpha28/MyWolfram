@@ -22,7 +22,7 @@ parseArgs [] = Left "Any options given"
 parseArgs ("--rule" : r : rest) = case readMaybe r of
     Just n  -> parseRest rest [RULE n]
     Nothing -> Left "The option --rule must be followed by an available value."
-parseArgs (opt : _) = Left $ "The first argument must be '--rule <nombre>'"
+parseArgs (opt : _) = Left $ "The first argument must be '--rule <value>'"
 
 parseRest :: [String] -> [Token] -> Either String [Token]
 parseRest [] tokens = Right tokens
@@ -39,6 +39,7 @@ parseRest (opt : val : rest) tokens
 parseRest _ _ = Left "Syntax error: option <value>."
 
 
+
 assignValue :: [Token] -> (Int, Int, Int, Int, Int, Char)
 assignValue tokens =
   ( extractRule tokens
@@ -51,7 +52,7 @@ assignValue tokens =
 
 extractRule :: [Token] -> Int
 extractRule (RULE v : _) = v
-extractRule _ = error "Option --rule is required"
+extractRule _ = -1
 
 extractStart :: [Token] -> Int
 extractStart (START v : _) = v
