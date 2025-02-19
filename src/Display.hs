@@ -5,13 +5,11 @@ import Graphics.Vty.Platform.Unix (mkVty)
 import Control.Monad (when)
 import System.Exit (exitSuccess)
 
--- Fonction principale qui choisit entre l'affichage terminal ou VTY
 displayAutomaton :: Int -> Int -> Int -> Int -> [String] -> Int -> IO ()
 displayAutomaton start window move lines automaton ncurses
     | ncurses == 0 = displayTerminal start window move lines automaton
     | otherwise    = displayVty start window move lines automaton
 
--- Fonction pour afficher avec Vty
 displayVty :: Int -> Int -> Int -> Int -> [String] -> IO ()
 displayVty start window move lines automaton = do
     vty <- mkVty Vty.defaultConfig
