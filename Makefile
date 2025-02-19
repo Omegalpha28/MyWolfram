@@ -1,18 +1,24 @@
-BINARY_PATH		:=	$(shell stack path --local-install-root)
-NAME			=	wolfram
-STACK			=	stack
-STACK_OBJ		=	.stack-work
+BINARY_PATH    := $(shell stack path --local-install-root)
+NAME           = wolfram
+STACK          = stack
+STACK_OBJ      = .stack-work
 
-SRC             =	src/Main.hs \
-					src/Rules.hs \
-					src/Display.hs \
-					src/Rules.hs \
-					src/ErrorHandling.hs \
-					src/Cells.hs
+SRC = src/Main.hs \
+      src/Rules.hs \
+      src/Display.hs \
+      src/ErrorHandling.hs \
+      src/Cells.hs \
+      src/Secret.hs
 
 all: $(NAME)
 
-$(NAME): $(SRC)
+install-vty:
+	@echo "Waiting for the installation..."
+	$(STACK) build --only-dependencies
+	$(STACK) install vty
+	@echo "Vty installated."
+
+$(NAME): $(SRC) install-vty
 	$(STACK) build
 	cp $(BINARY_PATH)/bin/$(NAME) ./$(NAME)
 
