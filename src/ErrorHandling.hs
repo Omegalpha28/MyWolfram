@@ -15,6 +15,8 @@ handleHelpException = do
     putStrLn "  --window  <value>   Set the size of the window. The size must be equal or greater than 0."
     putStrLn "  --move    <value>   Set the start value x."
     putStrLn "  --c       <char>    Define the character used. The character must be a printable ASCII character."
+    putStrLn "  --bad     <value>   That's a bad bonus, don't do it!"
+    putStrLn "  --vty     <value>   Display with vty. (key 'q' for stop vty)"
     exitWith ExitSuccess
 
 invalidOptionError :: String -> IO ()
