@@ -1,3 +1,10 @@
+{-
+-- EPITECH PROJECT, 2025
+-- wolfram
+-- File description:
+-- Args
+-}
+
 module Args (parseArgs, assignValue, validateRule, Token(..), safeTail) where
 
 import Control.Exception (throwIO)
@@ -19,40 +26,43 @@ data Token = RULE Int | START Int | WINDOW Int | LINES Int | MOVE Int | CHARACTE
 
 parseArgs :: [String] -> Either String [Token]
 parseArgs [] = Left "Any options given"
-parseArgs ("--rule" : r : rest) = case readMaybe r of
-    Just n  -> parseRest rest [RULE n]
-    Nothing -> Left "The option --rule must be followed by an available value."
+parseArgs ("--rule" : r : rest)
+    | Just n <- readMaybe r = parseRest rest [RULE n]
+    | otherwise = Left "--rule must be followed by an available value."
 parseArgs (opt : _) = Left $ "The first argument must be '--rule <value>'"
 
 parseRest :: [String] -> [Token] -> Either String [Token]
 parseRest [] tokens = Right tokens
-parseRest (opt : val : rest) tokens
-    | opt == "--c", Just c <- safeHead val = parseRest rest (tokens ++ [CHARACTER c])
-    | otherwise = case readMaybe val of
-        Just n -> case opt of
-            "--start"  -> parseRest rest (tokens ++ [START n])
-            "--window" -> parseRest rest (tokens ++ [WINDOW n])
-            "--lines"  -> parseRest rest (tokens ++ [LINES n])
-            "--move"   -> parseRest rest (tokens ++ [MOVE n])
-            "--bad"    -> parseRest rest (tokens ++ [BAD n])
-            "--vty"    -> parseRest rest (tokens ++ [NCURSES n])
-            _          -> Left $ "Invalid option or missing required value: " ++ opt
-        Nothing -> Left $ "Invalid option or missing required value: " ++ opt
-parseRest _ _ = Left "Syntax error: option <value>."
+parseRest ("--c" : val : rest) tokens
+    | Just c <- safeHead val = parseRest rest (tokens ++ [CHARACTER c])
+parseRest (opt : val : rest) tokens =
+  case readMaybe val of
+    Just n  -> parseOption opt n rest tokens
+    Nothing -> Left $ "Invalid option or missing required value: " ++ opt
 
+
+parseOption :: String -> Int -> [String] -> [Token] -> Either String [Token]
+parseOption opt n rest tokens = case opt of
+    "--start"  -> parseRest rest (tokens ++ [START n])
+    "--window" -> parseRest rest (tokens ++ [WINDOW n])
+    "--lines"  -> parseRest rest (tokens ++ [LINES n])
+    "--move"   -> parseRest rest (tokens ++ [MOVE n])
+    "--bad"    -> parseRest rest (tokens ++ [BAD n])
+    "--vty"    -> parseRest rest (tokens ++ [NCURSES n])
+    _          -> Left $ "Invalid option: " ++ opt
 
 
 assignValue :: [Token] -> (Int, Int, Int, Int, Int, Char, Int, Int)
 assignValue tokens =
-  ( extractRule tokens
-  , extractStart tokens
-  , extractWindow tokens
-  , extractLines tokens
-  , extractMove tokens
-  , extractChar tokens
-  , extractBad tokens
-  , extractNcurses tokens
-  )
+    ( extractRule tokens
+    , extractStart tokens
+    , extractWindow tokens
+    , extractLines tokens
+    , extractMove tokens
+    , extractChar tokens
+    , extractBad tokens
+    , extractNcurses tokens
+    )
 
 extractRule :: [Token] -> Int
 extractRule (RULE v : _) = v
@@ -94,8 +104,8 @@ extractNcurses (_ : xs) = extractNcurses xs
 extractNcurses [] = 0
 
 validateRule :: Int -> IO ()
-validateRule rule = do
-  if rule `elem` [30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222, 250]
-  then return ()
-  else exitError "Unexpected rule: The available rules are 30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158, 182, 188, 190, 220, 222 and 250"
-
+validateRule rule =
+    if rule `elem` [30, 54, 60, 62, 90, 94, 102, 110, 122, 126, 150, 158,
+        182, 188, 190, 220, 222, 250]
+    then return ()
+    else exitError "Unexpected rule: try 30, 54 or 60 for example"

@@ -1,3 +1,10 @@
+{-
+-- EPITECH PROJECT, 2025
+-- wolfram
+-- File description:
+-- Display
+-}
+
 module Display (displayAutomaton) where
 
 import qualified Graphics.Vty as Vty
@@ -6,21 +13,22 @@ import Control.Monad (when)
 import System.Exit (exitSuccess)
 
 displayAutomaton :: Int -> Int -> Int -> Int -> [String] -> Int -> IO ()
-displayAutomaton start window move lines automaton ncurses
-    | ncurses == 0 = displayTerminal start window move lines automaton
-    | otherwise    = displayVty start window move lines automaton
+displayAutomaton start window move lines automaton ncurses = case ncurses of
+    0 -> displayTerminal start window move lines automaton
+    _ -> displayVty start window move lines automaton
 
 displayVty :: Int -> Int -> Int -> Int -> [String] -> IO ()
-displayVty start window move lines automaton = do
+displayVty st window move line automat = do
     vty <- mkVty Vty.defaultConfig
-    Vty.hideCursor (Vty.outputIface vty)  -- Masquer le curseur (optionnel)
-    let displayLines = map (Vty.string Vty.defAttr) (take lines (drop (start - 1) automaton))
-    let image = Vty.picForImage (Vty.vertCat displayLines)
+    Vty.hideCursor (Vty.outputIface vty)
+    let disL = map (Vty.string Vty.defAttr) (take line (drop (st - 1) automat))
+    let image = Vty.picForImage (Vty.vertCat disL)
     Vty.update vty image
     handleEvent vty
 
 displayTerminal :: Int -> Int -> Int -> Int -> [String] -> IO ()
-displayTerminal start window move lines automaton = mapM_ displayLine (take lines (drop (start - 1) automaton))
+displayTerminal start window move lines automaton =
+    mapM_ displayLine (take lines (drop (start - 1) automaton))
     where
         displayLine line = putStrLn (centerLine line)
         centerLine line =
