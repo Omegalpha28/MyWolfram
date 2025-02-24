@@ -14,6 +14,7 @@ import Cells (generateAutomaton)
 import ErrorHandling (invalidOptionError, handleHelpException, invalidNumberError)
 import Args (parseArgs, assignValue, validateRule)
 import Data.Char (ord)
+import Secret (runBadApple)
 
 main :: IO ()
 main = do
@@ -25,7 +26,7 @@ main = do
         case result of
             Left err -> putStrLn err >> exitWith (ExitFailure 84)
             Right opts -> do
-                let (rule, start, window, lines, move, character) = assignValue opts
+                let (rule, start, window, lines, move, character, bad, ncurses) = assignValue opts
                 if (lines == -1) then invalidOptionError "--lines"
                 else if (window < 0) then invalidOptionError "--window"
                 else if (start < 0) then invalidNumberError ("Start index is out of bounds")
@@ -36,5 +37,17 @@ main = do
                     let newstart = start + 1
                     let newLines = lines + newstart - 1
                     automaton <- generateAutomaton rule newstart window newLines move character
-                    displayAutomaton newstart window move newLines automaton
-                    exitWith ExitSuccess
+                    displayAutomaton newstart window move newLines automaton ncurses
+                    if (bad == 1 && ncurses == 0)
+                        then do
+                            putStrLn "Do you like apples?: (y/n)"
+                            result <- getChar
+                            putStrLn "I don't care take this apple!"
+                            runBadApple character
+                            exitWith ExitSuccess
+                    else if (bad == 1 && ncurses /= 0)
+                        then do
+                            putStrLn "Turn off vty!"
+                            exitWith ExitSuccess
+                    else do
+                        exitWith ExitSuccess

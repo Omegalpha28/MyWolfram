@@ -2,8 +2,14 @@ name: wolfram
 version: '2.1.3'
 dependencies:
   - base >= 4.7 && < 5
+  - directory
+  - filepath
+  - process
+  - time
+  - vty
+  - vty-unix
 executables:
-  wolfram:
+  wolfram_bonus:
     main: Main.hs
     source-dirs: src
     ghc-options: -threaded

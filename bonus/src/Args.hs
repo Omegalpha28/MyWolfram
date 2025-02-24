@@ -22,7 +22,7 @@ safeTail :: [a] -> [a]
 safeTail [] = []
 safeTail (_:xs) = xs
 
-data Token = RULE Int | START Int | WINDOW Int | LINES Int | MOVE Int | CHARACTER Char deriving (Eq, Show)
+data Token = RULE Int | START Int | WINDOW Int | LINES Int | MOVE Int | CHARACTER Char | BAD Int | NCURSES Int deriving (Eq, Show)
 
 parseArgs :: [String] -> Either String [Token]
 parseArgs [] = Left "Any options given"
@@ -47,10 +47,12 @@ parseOption opt n rest tokens = case opt of
     "--window" -> parseRest rest (tokens ++ [WINDOW n])
     "--lines"  -> parseRest rest (tokens ++ [LINES n])
     "--move"   -> parseRest rest (tokens ++ [MOVE n])
+    "--bad"    -> parseRest rest (tokens ++ [BAD n])
+    "--vty"    -> parseRest rest (tokens ++ [NCURSES n])
     _          -> Left $ "Invalid option: " ++ opt
 
 
-assignValue :: [Token] -> (Int, Int, Int, Int, Int, Char)
+assignValue :: [Token] -> (Int, Int, Int, Int, Int, Char, Int, Int)
 assignValue tokens =
     ( extractRule tokens
     , extractStart tokens
@@ -58,6 +60,8 @@ assignValue tokens =
     , extractLines tokens
     , extractMove tokens
     , extractChar tokens
+    , extractBad tokens
+    , extractNcurses tokens
     )
 
 extractRule :: [Token] -> Int
@@ -88,6 +92,16 @@ extractChar :: [Token] -> Char
 extractChar (CHARACTER v : _) = v
 extractChar (_ : xs) = extractChar xs
 extractChar [] = '*'
+
+extractBad :: [Token] -> Int
+extractBad (BAD v : _) = v
+extractBad (_ : xs) = extractBad xs
+extractBad [] = 0
+
+extractNcurses :: [Token] -> Int
+extractNcurses (NCURSES v : _) = v
+extractNcurses (_ : xs) = extractNcurses xs
+extractNcurses [] = 0
 
 validateRule :: Int -> IO ()
 validateRule rule =

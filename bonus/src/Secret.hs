@@ -61,8 +61,8 @@ writeTextFile path content = writeFile path content
 
 checkTxt :: Char -> IO ()
 checkTxt char = do
-    let sourceDir = "bonus/TextFiles"
-    let targetDir = "TextFiles"
+    let sourceDir = "TextFiles"
+    let targetDir = "TF"
 
     exists <- doesDirectoryExist sourceDir
     if exists then do
