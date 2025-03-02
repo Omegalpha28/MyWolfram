@@ -9,14 +9,15 @@ SRC = src/Main.hs \
       src/Rules.hs \
       src/Display.hs \
       src/ErrorHandling.hs \
-      src/Cells.hs
+	  src/Args.hs
 
 BONUS_SRC = bonus/src/Main.hs \
       bonus/src/Rules.hs \
       bonus/src/Display.hs \
       bonus/src/ErrorHandling.hs \
       bonus/src/Cells.hs \
-      bonus/src/Secret.hs
+      bonus/src/Secret.hs \
+	  bonus/src/Args.hs
 
 all: $(NAME)
 
