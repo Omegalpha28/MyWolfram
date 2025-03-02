@@ -4,37 +4,40 @@
 -- File description:
 -- Main
 -}
-
-module Main where
-
 import System.Environment (getArgs)
 import System.Exit (exitWith, ExitCode(ExitFailure, ExitSuccess))
-import Display (displayAutomaton)
-import Cells (generateAutomaton)
-import ErrorHandling (invalidOptionError, handleHelpException, invalidNumberError)
 import Args (parseArgs, assignValue, validateRule)
-import Data.Char (ord)
+import Rules (applyRule)
+import Display (displayAll, displayInfinite)
+import ErrorHandling (exitError, handleHelpException, invalidOptionError, invalidNumberError, unexpectedError, validateOptions)
+
+handleError :: [String] -> Either String [String]
+handleError args
+    | length args < 2 = Left "Error: Not enough arguments"
+    | head args == "--help" || head args == "--h" = Left "Displaying help..."
+    | otherwise = case parseArgs args of
+        Left err -> Left err
+        Right opts -> Right (map show opts)
 
 main :: IO ()
 main = do
     args <- getArgs
-    if (length args < 2 || args !! 1 == "--help" || args !! 1 == "--h")
-        then handleHelpException
-    else do
-        let result = parseArgs args
-        case result of
+    case args of
+        [] -> putStrLn "Error: Not enough args!" >> exitWith (ExitFailure 84)
+        ("--help":_) -> handleHelpException
+        ("--h":_) -> handleHelpException
+        _ -> case parseArgs args of
             Left err -> putStrLn err >> exitWith (ExitFailure 84)
-            Right opts -> do
-                let (rule, start, window, lines, move, character) = assignValue opts
-                if (lines == -1) then invalidOptionError "--lines"
-                else if (window < 0) then invalidOptionError "--window"
-                else if (start < 0) then invalidNumberError ("Start index is out of bounds")
-                else if (ord character <= 32 || ord character >= 127) then invalidOptionError "--c"
-                else if (start < 0) then invalidOptionError "--start"
-                else do
-                    validateRule rule
-                    let newstart = start + 1
-                    let newLines = lines + newstart - 1
-                    automaton <- generateAutomaton rule newstart window newLines move character
-                    displayAutomaton newstart window move newLines automaton
-                    exitWith ExitSuccess
+            Right opts' -> do
+                let (r, start, win, line, move, c) = assignValue opts'
+                validationResult <- validateOptions line win start c
+                case validationResult of
+                    Just err -> putStrLn err >> exitWith (ExitFailure 84)
+                    Nothing -> validateRule r >>
+                        let initS = replicate (win `div` 2) ' ' ++ [c] ++ replicate (win `div` 2) ' '
+                            fL = applyRule r start initS c
+                        in if line < 0
+                            then displayInfinite r start win (-line) move c fL
+                            else displayAll r start win line move c fL
+                        >> exitWith ExitSuccess
+

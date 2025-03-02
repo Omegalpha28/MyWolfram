@@ -5,9 +5,10 @@
 -- ErrorHandling
 -}
 
-module ErrorHandling (exitError, handleHelpException, invalidOptionError, invalidNumberError, unexpectedError) where
+module ErrorHandling (exitError, handleHelpException, invalidOptionError, invalidNumberError, unexpectedError, validateOptions) where
 
 import System.Exit (exitWith, ExitCode (ExitFailure, ExitSuccess))
+import Data.Char (ord)
 
 exitError :: String -> IO ()
 exitError msg = putStrLn msg >> exitWith (ExitFailure 84)
@@ -41,5 +42,31 @@ invalidNumberError num = exitError $ num ++ ". Keep the value accurate."
 
 unexpectedError :: String -> IO ()
 unexpectedError errMsg = exitError $ "Unexpected error: " ++ errMsg
+
+validateOptions :: Int -> Int -> Int -> Char -> IO (Maybe String)
+validateOptions lines window start character = 
+    firstError [
+        check (lines == -1) "--lines"
+        , check (window < 0) "--window"
+        , check (start < 0) "Start index is out of bounds"
+        , check (ord character <= 32 || ord character >= 127) "--c"
+        , check (start < 0) "--start"
+    ]
+
+
+check :: Bool -> String -> IO (Maybe String)
+check condition errorMsg = 
+    if condition
+    then return $ Just errorMsg
+    else return Nothing
+
+firstError :: [IO (Maybe String)] -> IO (Maybe String)
+firstError [] = return Nothing
+firstError (x:xs) = do
+    result <- x
+    case result of
+        Just _  -> return result
+        Nothing -> firstError xs
+
 
 
